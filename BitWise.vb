@@ -21,11 +21,12 @@ Module Module1
     Dim MaskG6 As UInteger = 1040187392
 
     Sub Main()
-        Dim maxRandom = 6000 'CInt(Math.Pow(2, 30)) + 1
+        Dim maxRandom = CInt(Math.Pow(2, 30)) + 1
         Dim activePartLeftMask As UInteger = Convert.ToUInt32((New Random()).Next(1, maxRandom))
         While True
             Dim bits = Dec2Bin(activePartLeftMask)
-            Console.WriteLine("Number {0} is Binary: {1}", activePartLeftMask, bits)
+            'Console.WriteLine("Number {0} is Binary: {1}", activePartLeftMask, bits)
+            Console.Write("Number {0} ", activePartLeftMask)
             PrintBits(bits)
 
             Dim group As UInteger = ReadGroupNumber()
@@ -93,13 +94,47 @@ Module Module1
         End If
         Return activePartLeftRep
     End Function
+    ''' <summary>
+    ''' we basically do a clear-bit operation. 
+    ''' We start with 1 (bit pattern = 0x00000001)
+    ''' we shift the bits left (using the shift operator &lt;&lt;)  
+    ''' we then negate and do an AND operation on the result.
+    ''' </summary>
+    ''' <param name="groupRep">The group of five bits we are interested in</param>
+    ''' <param name="sensor">the sensor number we need to set from 1 to 0. The sensor number must be between 1 and 5</param>
+    ''' <param name="groupNumber">the group number; needed to know how far to shift to the right</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Function TurnOffSensor(ByVal groupRep As UInteger, ByVal sensor As UInteger, ByVal groupNumber As UInteger) As UInteger
-        Dim mask = Not (1 << CInt((sensor - 1) + (groupNumber - 1) * 5))
+        'Dim mask = Not (1 << CInt((sensor - 1) + (groupNumber - 1) * 5))
+        Dim mask = Not ShiftLeft(1, CInt((sensor - 1) + (groupNumber - 1) * 5))
         Return CUInt(groupRep And mask)
     End Function
+    ''' <summary>
+    ''' Test to see if the senor bit is alread 0 (off).
+    ''' </summary>
+    ''' <param name="groupRep"></param>
+    ''' <param name="sensor"></param>
+    ''' <param name="groupNumber"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Function IsSensorAlreadyOff(ByVal groupRep As UInteger, ByVal sensor As UInteger, ByVal groupNumber As UInteger) As Boolean
-        Dim mask = (1 << CInt((sensor - 1) + (groupNumber - 1) * 5))
+        'Dim mask = (1 << CInt((sensor - 1) + (groupNumber - 1) * 5))
+        Dim mask = ShiftLeft(1, CInt((sensor - 1) + (groupNumber - 1) * 5))
         Return (groupRep And mask) = 0
+    End Function
+    ''' <summary>
+    ''' Some languages do not have shift operators like vbscript
+    ''' </summary>
+    ''' <param name="pattern"></param>
+    ''' <param name="places"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Function ShiftLeft(ByVal pattern As Integer, ByVal places As Integer) As UInteger
+        If places <= 0 Then
+            Return CUInt(pattern) 'no shifting 
+        End If
+        Return CUInt(pattern * CInt(Math.Pow(2, places)))
     End Function
     Sub PrintBits(ByVal bits As String)
         For index As Integer = 2 To bits.Length - 1
@@ -122,5 +157,4 @@ Module Module1
         Next
         Return bits
     End Function
-
 End Module
