@@ -149,9 +149,9 @@ Module Module1
         Dim bits(31) As Char
         For index As Integer = 31 To 0 Step -1
             If (value And 1) > 0 Then
-                bits(index) = "1"(0)
+                bits(index) = "1"c
             Else
-                bits(index) = "0"(0)
+                bits(index) = "0"c
             End If
             value = value >> 1
         Next
