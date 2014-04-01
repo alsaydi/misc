@@ -1,14 +1,14 @@
 void Main()
 {
 	//WL(Math.Log(256,16).ToString());	
-	/*
-	int n = int.Parse("FFFE7960",System.Globalization.NumberStyles.AllowHexSpecifier);
+	
+	int n = int.MinValue;//int.Parse(int.MinValue,System.Globalization.NumberStyles.AllowHexSpecifier);
 	WL(""+n);
-	hex_div_approach(n);
+	WL(hex_div_approach(n));
 	WL(hex(n));
 	WL(bit_approach(n));
 	//return;	
-	*/
+	
 	for(int i=-10000000;i<=10000000;i++){
 		//Console.WriteLine("{0} 0x{1}",i.ToString("X"),hex(i));
 		if(int.Parse(bit_approach(i),System.Globalization.NumberStyles.AllowHexSpecifier)!=i){
@@ -56,7 +56,7 @@ string hex(int n){
 	while(place-->1){s+="0";}
 	return s;
 }
-void hex_div_approach(int n){
+string hex_div_approach(int n){
 	var q = 0;
 	var r = 1;
 	var s = "";
@@ -64,6 +64,9 @@ void hex_div_approach(int n){
 	if(n < 0){
 		n = int.MinValue - n;
 		negative = true;
+		if(n == 0){
+			return "80000000";
+		}
 	}
 	n = Math.Abs(n);
 	
@@ -77,7 +80,7 @@ void hex_div_approach(int n){
 		s = s.Substring(0,s.Length-1)+hexDigits[r+8];
 	}
 	s = new string(s.Reverse().ToArray());
-	WL(s);
+	return s;
 }
 string bit_approach(int n){
 	string s = "";
