@@ -26,6 +26,7 @@ class Program
         Console.WriteLine();
 
     }
+    //nondecreasing reversed alphabetical order
     static ulong part(int n)
     {
         int[] array = new int[n];
