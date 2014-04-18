@@ -29,24 +29,24 @@ ullong part_increasing_alph_order(int n){
     counter ++;
     index = partLen - 1;
     array[index]++;
-    sum = n+1;//because we incremented array[index];
-    for(i=index+1;i<=partLen;i++){
-      sum -= array[i];
-      array[i]--;
+    sum = n+1;//+1 because we incremented array[index];
+    sum -= array[index+1];
+    array[index+1]--;    
+    i = 1;
+    /* after incrementing the number at current index and decrementing at index+1, there are two scenarios
+       1) we are still increasing, therefore we spread the number at array[index] over the remaining 
+          entries, the last one maybe larger.
+       2) are decreasing (e.g: 1 2 2 1) we combine the last two (e.g: 1 2 3).
+       note that we used to detect which scenario we are in and branch accordingly
+       but we don't need that because of the way we are tracking sum */
+    while(1){
+      array[index+i]=array[index];
+      if(sum + array[index]>n) break;
+      sum += array[index];
+      i++;
     }
-    if(array[index]<=array[index+1]){//we are still increasing
-      i = 1;
-      while(1){ /* spread array[index] over the remaining entries except the last one may be larger */
-	array[index+i]=array[index];
-	if(sum + array[index]>n) break;
-	sum += array[index];
-	i++;
-      }
-      index = index+i-1;
-      array[index] += (n - sum);
-    }else{
-      array[index] += array[index+1];
-    }
+    index = index+i-1;
+    array[index] += (n - sum); /*if not increasing anymore, combin the last two elements and if increasing, the last element will be larger. */
     //print_array(array,index,n);
     partLen = index ;
   }
