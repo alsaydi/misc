@@ -3,14 +3,14 @@
 void print_array(int * array,int index,int n){
   int sum = 0;
   for(int i=0;i<=index;i++){
-    // fprintf(stdout,"%d ",array[i]);
+    fprintf(stdout,"%d ",array[i]);
     sum += array[i];
   }
   if(sum != n){
     fprintf(stdout,"Sum != n sum == %d, n == %d\n",sum,n);
     exit(-1);
   }
-  //  fprintf(stdout,"%s\n","");
+  fprintf(stdout,"%s\n","");
 }
 int part_increasing_alph_order(int n){
   int * array = (int *)malloc(sizeof(int)*n);
@@ -24,8 +24,8 @@ int part_increasing_alph_order(int n){
   for(i=0;i<n;i++){
     array[i]=1;
   }
-  print_array(array,index,n);
-  while(partLen >= 0 && array[0]<n){
+  //print_array(array,index,n);
+  while( array[0]<n){
     counter ++;
     index = partLen - 1;
     array[index]++;
