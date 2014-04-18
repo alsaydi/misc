@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+typedef unsigned long long ullong;
 void print_array(int * array,int index,int n){
   int sum = 0;
   for(int i=0;i<=index;i++){
@@ -12,15 +13,14 @@ void print_array(int * array,int index,int n){
   }
   fprintf(stdout,"%s\n","");
 }
-int part_increasing_alph_order(int n){
+ullong part_increasing_alph_order(int n){
   int * array = (int *)malloc(sizeof(int)*n);
   int i =0;
   int partLen = n -1;
   int index = partLen;
   int sum = 0;
-  int still_increasing_order = 1;
   int repeats = 0;
-  int counter = 1;
+  ullong counter = 1;
   for(i=0;i<n;i++){
     array[i]=1;
   }
@@ -34,18 +34,13 @@ int part_increasing_alph_order(int n){
       sum -= array[i];
       array[i]--;
     }
-    still_increasing_order = 1;
-    for(i=index;i<partLen;i++){
-      if(array[i]>array[i+1]){//we are still increasing
-	still_increasing_order = 0;
-	break;
-      }
-    }
-    if(still_increasing_order == 1){
-      repeats = (n - sum) / array[index];
-      for(i=1;i<=repeats;i++){
+    if(array[index]<=array[index+1]){//we are still increasing
+      i = 1;
+      while(1){ /* spread array[index] over the remaining entries except the last one may be larger */
 	array[index+i]=array[index];
+	if(sum + array[index]>n) break;
 	sum += array[index];
+	i++;
       }
       index = index+i-1;
       array[index] += (n - sum);
@@ -63,7 +58,7 @@ int main(int argc,char ** argv){
   if(argc > 1){
     n = atoi(argv[1]);
   }
-  int solutions = part_increasing_alph_order(n);  
-  fprintf(stdout,"Number of solutions: %d\n",solutions);
+  ullong solutions = part_increasing_alph_order(n);  
+  fprintf(stdout,"Number of solutions: %llu\n",solutions);
   return 0;
 }
