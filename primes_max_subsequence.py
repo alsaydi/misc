@@ -1,4 +1,4 @@
-//euler 50
+#euler 50
 import sys
 import math
 def isPrime(n):
