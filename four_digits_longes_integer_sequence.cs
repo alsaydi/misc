@@ -7,23 +7,19 @@ class Program
     static int counter = 0;
     static void Main()
     {
-        /* 
-        Console.Read();
-        Console.WriteLine(EvaluatePostfix("8512/-*"));
-        Environment.Exit(0); 
-         * */
-        //var s = "123456789";
-        var s = "1258";
+        var s = "123456789";
         int n = 4;
         Dictionary<object, int> diHT = new Dictionary<object, int>();
         Powerset(s, "", 0, n, diHT);
-        //        Console.WriteLine("Sets: {0}", counter);
 
         Dictionary<object, int> opsHT = new Dictionary<object, int>();
         s = "++++----****////";
         n = 3;
         Powerset(s, "", 0, n, opsHT);
-        //Console.WriteLine("Ops Sets: {0}", counter);
+
+        /* find all possible combinations of digits and operators and form a postfix notation of each
+         * possibility.
+         * */
         List<string> possibleOps = new List<string>();
         foreach (var digits in diHT)
         {
@@ -33,12 +29,7 @@ class Program
                 possibleOps.AddRange(possible);
             }
         }
-        //foreach (var item in possibleOps)
-        //{
-        //    Console.Write(item);
-        //    var value = EvaluatePostfix(item);
-        //    Console.WriteLine(" {0}", value);
-        //}
+        
         var evals = new List<Eval>();
         foreach (var expr in possibleOps)
         {
@@ -59,14 +50,7 @@ class Program
                 eval.AddValue(expr.Substring(4), value);
             }
         }
-        /*foreach (var eval in evals)
-        {
-            var lines = eval.GetAll();
-            foreach (var line in lines)
-            {
-                Console.WriteLine(line);
-            }
-        }*/
+        
         var allDigits = new Dictionary<string, List<double>>();
         foreach (var eval in evals)
         {
@@ -91,7 +75,6 @@ class Program
             {
                 if (value > prevValue + 1)
                 {
-                    Console.WriteLine("{0},{1}", item.Key, prevValue);
                     if (prevValue > maxValue)
                     {
                         maxValue = prevValue;
@@ -99,8 +82,7 @@ class Program
                     }
                     break;
                 }
-                prevValue = value;
-                //Console.WriteLine("{0},{1}", item.Key, value);                
+                prevValue = value;             
             }
         }
         Console.WriteLine("These four digits produce the longest sequence: {0} which is of length: {1}.", maxValueProducingDigits, maxValue);
@@ -111,19 +93,23 @@ class Program
         {
             if (ht.ContainsKey(p))
                 return;
-            ht.Add(p, 1);
-            //Console.WriteLine(p);
+            ht.Add(p, 1);            
             counter++;
         }
         for (int i = index; i < s.Length; i++)
         {
-            var news = s.Substring(0, i) + s.Substring(i + 1);
-            //if(p.Length>0 && p[p.Length-1]>s[i]) return;
-            //if(p.Length>0 && p[p.Length-1] == s[i]) break;
+            var news = s.Substring(0, i) + s.Substring(i + 1);            
             var newp = p + s[i];
             Powerset(news, newp, i, n, ht);
         }
     }
+    /// <summary>
+    /// for each permutation of digits (abcd) append every permutation of operators.
+    /// return a list of all possibilities.
+    /// </summary>
+    /// <param name="digits"></param>
+    /// <param name="ops"></param>
+    /// <returns></returns>
     static List<string> SpreadOps(string digits, string ops)
     {
         var expressions = new List<string>();
@@ -143,10 +129,14 @@ class Program
                 }
             }
         }
-        //Console.WriteLine(expressions.Count);
-        return expressions;
-        //return s;	
+        return expressions;        
     }
+    /// <summary>
+    /// playing with the yield keyword to return permuations
+    /// </summary>
+    /// <param name="s"></param>
+    /// <param name="p"></param>
+    /// <returns></returns>
     static IEnumerable<string> perm(string s, string p)
     {
         if (s.Length == 0)
@@ -190,7 +180,6 @@ class Program
                         break;
                     case '-':
                         result = operand2 - operand1;
-                        //if (result < 0) return -1;
                         stack.Push(result);
                         break;
                     case '*':
@@ -198,8 +187,6 @@ class Program
                         stack.Push(result);
                         break;
                     case '/':
-                        //if (operand2 % operand1  != 0) return 9999;
-                        //Console.WriteLine("{0} {1}", operand1, operand2);
                         result = operand2 / operand1;
                         stack.Push(result);
                         break;
@@ -208,7 +195,7 @@ class Program
                 }
             }
         }
-        return Math.Abs((stack.Pop()));
+        return Math.Abs(Math.Round(stack.Pop()));
     }
 }
 public class Eval : IEquatable<Eval>
