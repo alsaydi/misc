@@ -20,8 +20,46 @@ public class Program
         //Console.Write("{0} " , loops  ++);
         if (loops % 100 == 0) Console.WriteLine();
         hashTable = new Dictionary<int, int>();
-        var timeSeed = (int)DateTime.Now.Ticks & 0x0000FFFF + (int)Environment.WorkingSet;
         var N = 20;
+        var array = BuildArray(N);
+        var list = new List<int[]>();
+        list.Add(new int[]{1,2,3,10,10,10,10,10,10,10,20,20,20,20,20,20,20,20,20,20,30,30,30,30,30,30,30,30,30,30,40,40,40,40,40,40,40,40,40,40,50,50,50,50,50,50,50,50,50,50
+                                    ,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+                                    ,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1});
+        list.Add(new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 });
+        list.Add(new int[] { 2, 2, 1, 3, 1, 3, 1, 3, 1, 3, 3, 1, 1, 3, 3 });
+        list.Add(new int[] { 2, 2, 3, 3, 2, 3, 2, 3, 1, 2 });
+        list.Add(new int[] { 2, 2, 1, 3, 1, 3, 1, 3, 1, 3, 3, 3 });
+        list.Add(new int[] { 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 });
+        list.Add(new int[] { 2, 2, 3, 1, 3, 3 });
+        list.Add(new int[] { 1, 2, 1, 2, 2, 1, 3, 3, 2, 2, 2 });
+        list.Add(new int[] { 1, 2, 1, 2, 1, 2, 1, 2, 3, 3, 3, 2, 2, 2 });
+        list.Add(new int[] { 3, 3, 3, 1, 3, 1, 3, 1, 3, 1, 3, 3, 1, 3, 3, 4, 4, 4, 4 });
+        list.Add(new int[] { 3, 3, 1, 3, 3, 1, 3, 3, 1, 3, 3, 1, 4, 4, 4, 4 });
+        foreach (var arr in list)
+        {
+            Console.WriteLine("*".PadRight(30, '*'));
+            PrintArray(arr);
+            Console.WriteLine(arr.Length);
+            int foundMode = FindMode(arr, 0, arr.Length - 1).Mode;
+            int qMode = FindModeQuadratic(arr);
+            int sMode = SortAndFindMode(arr);
+            int lMode = FindModeLinear(arr);
+            /*Console.WriteLine("Mode in Quadratic time: {0}", qMode);
+            Console.WriteLine("Mode using hashtable: {0}", foundMode);
+            Console.WriteLine("Mode in sorted array: {0}", sMode);
+            Console.WriteLine("Mode lineary method: {0}", lMode);*/
+            if (foundMode != lMode)
+            {
+                Console.WriteLine("Different {0} {1}", foundMode, lMode);
+                //break;
+            }
+        }
+        //}
+    }
+    static int[] BuildArray(int N)
+    {
+        var timeSeed = (int)DateTime.Now.Ticks & 0x0000FFFF + (int)Environment.WorkingSet;
         int max = N * 2;
         var arr = new int[N];
         var mode = (new Random(timeSeed)).Next(1, max);
@@ -45,44 +83,7 @@ public class Program
                 arr[i] = (new Random(i + 1 + timeSeed)).Next(1, max);
             }
         }
-
-        //for(int i=0;i<N/2;i++){ arr[i] = 1;}	for(int i=N/2;i<N;i++){ arr[i] = 2;}
-        //for(int i=N-subLength-1;i<N;i++){ arr[i] = -11;}
-
-        /*arr = new int[]{1,2,3,10,10,10,10,10,10,10
-    ,20,20,20,20,20,20,20,20,20,20
-    ,30,30,30,30,30,30,30,30,30,30
-    ,40,40,40,40,40,40,40,40,40,40
-    ,50,50,50,50,50,50,50,50,50,50
-    ,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
-    ,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
-    ,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
-    ,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
-    ,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};*/
-        //arr = new int[]{1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-        //arr = new int[]{2,2,1,3,1,3,1,3,1,3,3,1,1,3,3};
-        //arr = new int[]{2,2,3,3,2,3,2,3,1,2};
-        //arr = new int[] { 2, 2, 1, 3, 1, 3, 1, 3, 1, 3, 3, 3 };
-        //arr = new int[] { 1,2,1,2,1,2,1,2,1,2,1,2,1,2 };
-        //arr = new int[] { 2, 2, 3, 1, 3, 3 };
-        //arr = new int[] { 1, 2, 1, 2, 2, 1, 3, 3, 2, 2, 2 };
-        //arr = new int[] { 1, 2, 1, 2, 1, 2, 1, 2, 3, 3, 3, 2, 2, 2 };
-        PrintArray(arr);
-        Console.WriteLine(arr.Length);
-        int foundMode = FindMode(arr, 0, arr.Length - 1).Mode;
-        int qMode = FindModeQuadratic(arr);
-        int sMode = SortAndFindMode(arr);
-        int lMode = FindModeLinear(arr);
-        Console.WriteLine("Mode in Quadratic time: {0}", qMode);
-        Console.WriteLine("Mode using hashtable: {0}", foundMode);
-        Console.WriteLine("Mode in sorted array: {0}", sMode);
-        Console.WriteLine("Mode lineary method: {0}", lMode);
-        if (foundMode != lMode)
-        {
-            Console.WriteLine("Different {0} {1}", foundMode, lMode);
-            //break;
-        }
-        //}
+        return arr;
     }
     static double StdDev(int[] arr)
     {
@@ -168,7 +169,7 @@ public class Program
     }
     static int FindModeQuadratic(int[] arr)
     {
-        Console.WriteLine(arr.Length);
+        //Console.WriteLine(arr.Length);
         int reps = 0;
         int mode = arr[0];
         int maxReps = 0;
@@ -199,7 +200,7 @@ public class Program
                 break;
             }
         }
-        Console.WriteLine("CTR: {0}", ctr);
+        //Console.WriteLine("CTR: {0}", ctr);
         return mode;
     }
     static int SortAndFindMode(int[] array)
@@ -270,13 +271,20 @@ public class Program
                 }
                 start++;
             }
-
             if (reps > prevReps)
             {
                 mode = arr[repeatingIndex];
             }
+
+            if (arr[repeatingIndex] == mode && prevReps > 1)
+            {
+                prevReps += reps;
+            }
+            else
+            {
+                prevReps = reps;
+            }
             repeatingIndex = start + 1;
-            prevReps = reps;
             reps = 1;
         }
         return mode;
