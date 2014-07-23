@@ -8,20 +8,8 @@ namespace ConsTest
 {
     class Mode
     {
-        //static int subLength = 10;
-        static Dictionary<int, int> hashTable;
-        //{1,2,1,2,1,2,1,2,1}
         public static void Test()
         {
-//            Console.ReadKey();
-            int loops = 1;
-            //while(true){
-            //System.Threading.Thread.Sleep(2000);
-            //Console.Write("{0} " , loops  ++);
-            if (loops % 100 == 0) Console.WriteLine();
-            hashTable = new Dictionary<int, int>();
-            var N = 20;
-            //var array = BuildArray(N);
             var list = new List<int[]>();
             list.Add(new int[] { 1, 2, 3, 10, 10, 10, 10, 10, 10, 10, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 });
             list.Add(new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 });
@@ -41,12 +29,17 @@ namespace ConsTest
             list.Add(new int[] { 11, 10, 9, 8, 7, 6, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1 });
             list.Add(new int[] { 1, 2, 1, 2, 1, 2, 1, 2, 3, 3, 3, 3, 3, 1, 1, 1, 2, 2, 1, 1, 2, 1, 1, 1, 2, 1, 1, 2, 1, 1 });
             list.Add(new int[] { 4,5,1, 1,3, 1, 1, 2, 2,1 });
+            list.Add(new int[] { 1, 1, 1, 2, 1, 1, 3, 3, 3, 3, 3, 3, 1, 1, 1 });
+            list.Add(new int[] { 2, 3, 2, 1, 3, 3 });
+            list.Add(new int[] { 2, 3, 2, 3, 3, 3 });
+            list.Add(new int[] { 2, 2, 2, 3, 3, 3 });
+            list.Add(new int[] { 1, 1, 2, 1, 1, 2, 1, 1, 2, 3, 3, 3, 3, 3, 3, 1 });
             foreach (var arr in list)
             {
                 int foundMode = FindMode(arr, 0, arr.Length - 1).Mode;
                 int qMode = FindModeQuadratic(arr);
                 int sMode = SortAndFindMode(arr);
-                int lMode = FindModeLinear(arr);
+                int lMode = FindModeLinear(arr,false);
                 if (false)
                 {
                     Console.WriteLine("Mode in Quadratic time: {0}", qMode);
@@ -60,14 +53,13 @@ namespace ConsTest
                     {
                         PrintArray(arr);
                         Console.WriteLine("Different expected: {0} actual: {1}", foundMode, lMode);
-                        lMode = FindModeLinear(arr);
+                        lMode = FindModeLinear(arr,true);
                         Console.WriteLine("*".PadRight(30, '*'));
                         Console.WriteLine(arr.Length);
-                        break;
+                       // break;
                     }
                 }
-            }
-            //}
+            }            
         }
         static int[] BuildArray(int N)
         {
@@ -133,10 +125,7 @@ namespace ConsTest
             Console.WriteLine();
             for (int i = 0; i < arr.Length; i++)
             {
-                Console.Write("{0} ", arr[i]);
-                /*if((1+i)%subLength == 0){
-                    Console.WriteLine();
-                }*/
+                Console.Write("{0} ", arr[i]);                
             }
             Console.WriteLine();
         }
@@ -246,7 +235,7 @@ namespace ConsTest
             }
             return finalMode;
         }
-        static int FindModeLinear(int[] arr)
+        static int FindModeLinear(int[] arr,bool debug)
         {
             int mostRepeated = 0;
             int mostRepeatedReps = 0;
@@ -254,6 +243,9 @@ namespace ConsTest
             int runnerUpReps = 0;
             mostRepeated = arr[0];
             mostRepeatedReps = 1;
+            int prevRunnerUp = 0;
+            int prevRunnerUpReps = 0;
+            int flag = 1;
             for (int i = 1; i < arr.Length; i++)
             {
                 if (arr[i] == mostRepeated)
@@ -287,10 +279,17 @@ namespace ConsTest
                         occurrences++;
                         i++;
                     }
+                    if (flag == 1)
+                    {
+                        if (arr[i] == prevRunnerUp)
+                        {
+                            occurrences += prevRunnerUpReps;
+                        }   
+                    }                 
                     if (occurrences >= mostRepeatedReps)
                     {
-                        //runnerUp = mostRepeated;
-                        runnerUpReps = 0; //let's look for a new runner up
+                        runnerUp = mostRepeated;
+                        runnerUpReps = mostRepeatedReps; //if we set mostRepeatedReps to zero then let's look for a new runner up
                         mostRepeated = arr[i];
                         mostRepeatedReps = occurrences;
                     }
@@ -303,7 +302,17 @@ namespace ConsTest
             }
             if (runnerUpReps == mostRepeatedReps)
             {
-                if (runnerUp == arr[0] || runnerUp == arr[1]) /* the mode must occurr in the first two elements otherwise  a repetition must have happend later in 
+                int index = 0;
+                while (index < arr.Length - 1 && arr[index] == arr[index + 1])
+                {
+                    index++;
+                }
+                if (index > 0)
+                {
+                    index++;
+                }
+                if (index < arr.Length - 2 && (runnerUp == arr[index] || runnerUp == arr[index + 1])
+                    && (mostRepeated != arr[index] && mostRepeated != arr[index+1])) /* the mode must occurr in the first two elements otherwise  a repetition must have happend later in 
                                                                * the array and we would not be in this situation; i think.*/
                 {
                     mostRepeated = runnerUp;
