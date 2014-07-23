@@ -167,6 +167,7 @@ public class Program
         }
         throw new NotImplementedException("Incomplete");
     }
+    //buggy
     static int FindModeQuadratic(int[] arr)
     {
         //Console.WriteLine(arr.Length);
@@ -234,70 +235,66 @@ public class Program
         return finalMode;
     }
     static int FindModeLinear(int[] arr)
-    {
-        int start = 0;
-        int repeatingIndex = FindRepeatingIndex(arr, start);        
-        int reps = 0;
-        int prevReps = 1;
-        int mode = arr[start];
-        bool found = false;
-        while (repeatingIndex >= 0 && repeatingIndex < arr.Length)
         {
-            start = repeatingIndex;
-            while (start < arr.Length - 1 && arr[start] == arr[start + 1])
+            int mostRepeated = 0;
+            int mostRepeatedReps = 0;
+            int runnerUp = 0;
+            int runnerUpReps = 0;
+            mostRepeated = arr[0];
+            mostRepeatedReps = 1;
+            for (int i = 1; i < arr.Length; i++)
             {
-                start++;
-                reps++;
-                if (reps == arr.Length / 2)
+                if (arr[i] == mostRepeated)
                 {
-                    mode = arr[start];
-                    found = true;
-                    break;
+                    mostRepeatedReps++;
                 }
-            }
-            if (found)
-            {
-                break;
-            }
-            while (start < arr.Length - 1 && arr[start] != arr[start + 1])
-            {
-                if (arr[start] == mode)
+                else if (runnerUpReps == 0)
                 {
-                    reps++;
+                    runnerUp = arr[i];
+                    runnerUpReps++;
+                }
+                else if (arr[i] == runnerUp)
+                {
+                    runnerUpReps++;
                 }
                 else
                 {
-                    break;
-                }
-                start++;
-            }
-            if (reps > prevReps)
-            {
-                mode = arr[repeatingIndex];
-            }
+                    if (runnerUpReps >= mostRepeatedReps)
+                    {
+                        int temp = runnerUp;
+                        runnerUp = mostRepeated;
+                        mostRepeated = temp;
 
-            if (arr[repeatingIndex] == mode && prevReps > 1)
-            {
-                prevReps += reps;
+                        temp = runnerUpReps;
+                        runnerUpReps = mostRepeatedReps;
+                        mostRepeatedReps = temp;
+                    }
+                    int occurrences = 1;
+                    while (i < arr.Length - 1 && arr[i] == arr[i + 1])
+                    {
+                        occurrences++;
+                        i++;
+                    }
+                    if (occurrences >= mostRepeatedReps)
+                    {
+                        runnerUp = mostRepeated;
+                        runnerUpReps = mostRepeatedReps;
+                        mostRepeated = arr[i];
+                        mostRepeatedReps = occurrences;
+                    }
+                    else if (occurrences >= runnerUpReps)
+                    {
+                        runnerUp = arr[i];
+                        runnerUpReps = occurrences;
+                    }
+                }
             }
-            else
+            if (runnerUpReps > mostRepeatedReps)
             {
-                prevReps = reps;
+                mostRepeated = runnerUp;
             }
-            repeatingIndex = start + 1;
-            reps = 1;
+            //Console.WriteLine(mostRepeatedReps);
+            return mostRepeated;
         }
-        return mode;
-    }
-    static int FindRepeatingIndex(int[] arr, int start)
-    {
-        for (int i = start; i < arr.Length - 1; i++)
-        {
-            if (arr[i] == arr[i + 1])
-            {
-                return i;
-            }
-        }
-        return -1;
-    }
+    
 }
