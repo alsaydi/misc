@@ -289,8 +289,8 @@ namespace ConsTest
                     }
                     if (occurrences >= mostRepeatedReps)
                     {
-                        runnerUp = mostRepeated;
-                        runnerUpReps = 0;
+                        //runnerUp = mostRepeated;
+                        runnerUpReps = 0; //let's look for a new runner up
                         mostRepeated = arr[i];
                         mostRepeatedReps = occurrences;
                     }
