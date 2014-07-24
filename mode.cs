@@ -36,6 +36,9 @@ namespace ConsTest
             list.Add(new int[] { 1, 1, 2, 1, 1, 2, 1, 1, 2, 3, 3, 3, 3, 3, 3, 1 });
             list.Add(new int[] { 1, 1, 1, 4, 1, 1, 4, 1, 4, 1, 1, 1, 4, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3 });
             list.Add(new int[] { 2, 2, 2, 2, 2, 3, 3, 3, 3, 1, 1, 1, 4, 1, 1, 4, 1, 4, 1, 1, 1, 4, 1, 1, 1 });
+            list.Add(new int[] { 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 1,5,1,1,1,5,1,1,1,5,1,1,1 });
+            //Console.WriteLine(list.Last().Count());
+            //Console.WriteLine(list.Last().Where(a => a == 1).Count());
             foreach (var arr in list)
             {
                 int foundMode = FindMode(arr, 0, arr.Length - 1).Mode;
@@ -62,17 +65,17 @@ namespace ConsTest
                     }
                 }
             }
-            //TestUsingRandomArrays();
+            TestUsingRandomArrays();
         }
 
         private static void TestUsingRandomArrays()
         {
-            int N = 100;
+            int N = 1000;
             int reps = 1000;
             for (int i = 0; i < reps; i++)
             {
                 var arr = BuildArray(N);
-                PrintArray(arr);
+                //PrintArray(arr);
                 int foundMode = FindMode(arr, 0, arr.Length - 1).Mode;
                 int lMode = FindModeLinear(arr, false);
                 if (foundMode != lMode)
@@ -89,7 +92,7 @@ namespace ConsTest
                 }
                 else
                 {
-                    Console.WriteLine("Mode found: {0}", lMode);
+                  //  Console.WriteLine("Mode found: {0}", lMode);
                 }
             }
         }
@@ -276,7 +279,9 @@ namespace ConsTest
             mostRepeated = arr[0];
             mostRepeatedReps = 1;
             int prevRunnerUp = 0;
-            int prevRunnerUpReps = 0;            
+            int prevRunnerUpReps = 0;
+            int others = 0;
+            int len = arr.Length;
             if (debug)
             {
                 Console.Write("{0} ", arr[0]);
@@ -286,6 +291,17 @@ namespace ConsTest
                 if (debug)
                 {
                     Console.Write("{0} ", arr[i]);
+                }
+                if ((i+1)*2>len)
+                {
+                    if (others > mostRepeatedReps)/* we passed the mid point of the array but the most repeated element so far is repeated fewer times than 
+                                                   * the other elements (exclude 2nd most repeated and 3rd most repeated); we need to reset counters, mode will be in the remaining half of the array. */
+                    {
+                        mostRepeated = arr[i];
+                        mostRepeatedReps = 1;
+                        runnerUpReps = 0;
+                        prevRunnerUpReps = 0;
+                    }
                 }
                 if (arr[i] == mostRepeated)
                 {
@@ -315,6 +331,10 @@ namespace ConsTest
                     int occurrences = 1;
                     while (i < arr.Length - 1 && arr[i] == arr[i + 1])
                     {
+                        if (debug)
+                        {
+                            Console.Write("{0} ", arr[i]);
+                        }
                         occurrences++;
                         i++;
                     }
@@ -339,6 +359,10 @@ namespace ConsTest
                         prevRunnerUp = arr[i];
                         prevRunnerUpReps = occurrences;
                     }
+                    else
+                    {
+                        others += occurrences;
+                    }
                 }
             }
             if (runnerUpReps == mostRepeatedReps)
@@ -362,6 +386,10 @@ namespace ConsTest
             if (runnerUpReps > mostRepeatedReps)
             {
                 mostRepeated = runnerUp;
+            }
+            if (debug)
+            {
+                Console.WriteLine();
             }
             //Console.WriteLine(mostRepeatedReps);
             return mostRepeated;
