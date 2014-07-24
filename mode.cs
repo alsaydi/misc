@@ -38,12 +38,28 @@ namespace ConsTest
             list.Add(new int[] { 2, 2, 2, 2, 2, 3, 3, 3, 3, 1, 1, 1, 4, 1, 1, 4, 1, 4, 1, 1, 1, 4, 1, 1, 1 });
             list.Add(new int[] { 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1 });
             list.Add(new int[] { 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 });
+            list.Add(new int[] { 1, 3, 3, 3, 3, 3, 3, 2, 1, 1, 2, 1, 1, 2, 1, 1 });
+            list.Add(new int[] { 4, 4, 4, 4, 4, 3, 3, 3, 3, 2, 2, 2, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 1, 7, 7, 7, 1, 1, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7 });
+            Console.WriteLine("Last List Count: {0}",list.Last().Count());
+            Console.WriteLine("Mode: {0}", list.Last().Where(a => a == 1).Count());
+            Console.WriteLine("Runner up: {0}", list.Last().Where(a => a == 2).Count());
+            var last = list.Last();
+            var seg = last.Skip(last.Length / 2);//.Take(40);
+            PrintArray(seg.ToArray());
+            //last[last.Length / 2] = 7;
+            Console.WriteLine("MidPoint: {0}", last[last.Length / 2]);
+            Console.WriteLine("MidPoint-1: {0}", last[last.Length / 2-1]);
+            Console.WriteLine("MidPoint+1: {0}", last[last.Length / 2+1]);
+            
+            //FindModeLinear(last, true);
             foreach (var arr in list)
             {
-                int foundMode = FindMode(arr, 0, arr.Length - 1).Mode;
-                int qMode = FindModeQuadratic(arr);
-                int sMode = SortAndFindMode(arr);
-                int lMode = FindModeLinear(arr, false);
+                //var rarr = arr.Reverse().ToArray();
+                var rarr = arr;
+                int foundMode = FindMode(rarr, 0, arr.Length - 1).Mode;
+                int qMode = FindModeQuadratic(rarr);
+                int sMode = SortAndFindMode(rarr);
+                int lMode = FindModeLinear(rarr, false);
                 if (false)
                 {
                     Console.WriteLine("Mode in Quadratic time: {0}", qMode);
@@ -53,11 +69,11 @@ namespace ConsTest
                 }
                 if (foundMode != lMode)
                 {
-                    if (!(arr.Distinct().Count() == 2))
+                    if (!(rarr.Distinct().Count() == 2))
                     {
-                        PrintArray(arr);
+                        PrintArray(rarr);
                         Console.WriteLine("Different expected: {0} actual: {1}", foundMode, lMode);
-                        lMode = FindModeLinear(arr, true);
+                        lMode = FindModeLinear(rarr, true);
                         Console.WriteLine("*".PadRight(30, '*'));
                         Console.WriteLine(arr.Length);
                         // break;
@@ -300,6 +316,7 @@ namespace ConsTest
                         mostRepeatedReps = 1;
                         runnerUpReps = 0;
                         prevRunnerUpReps = 0;
+                        others = 0;                        
                     }
                 }
                 if (arr[i] == mostRepeated)
@@ -375,11 +392,19 @@ namespace ConsTest
                 {
                     index++;
                 }
-                if (index < arr.Length - 2 && (runnerUp == arr[index] || runnerUp == arr[index + 1])
-                    && (mostRepeated != arr[index] && mostRepeated != arr[index + 1])) /* the mode must occurr in the first two elements otherwise  a repetition must have happend later in 
-                                                               * the array and we would not be in this situation; i think.*/
+                if (index < arr.Length - 2 && (runnerUp == arr[index] || runnerUp == arr[index + 1]))
                 {
-                    mostRepeated = runnerUp;
+
+                    if (arr[index + 1] == arr[index + 2])
+                    {
+                        mostRepeated = runnerUp;
+                    }
+                    else if (mostRepeated != arr[index] && mostRepeated != arr[index + 1] && arr[index] != arr[index + 1])
+                    /* the mode must occurr in the first two elements otherwise  a repetition must have happend later in 
+                                                               * the array and we would not be in this situation; i think.*/
+                    {
+                        mostRepeated = runnerUp;
+                    }
                 }
             }
             if (runnerUpReps > mostRepeatedReps)
