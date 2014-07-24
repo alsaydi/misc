@@ -36,9 +36,8 @@ namespace ConsTest
             list.Add(new int[] { 1, 1, 2, 1, 1, 2, 1, 1, 2, 3, 3, 3, 3, 3, 3, 1 });
             list.Add(new int[] { 1, 1, 1, 4, 1, 1, 4, 1, 4, 1, 1, 1, 4, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3 });
             list.Add(new int[] { 2, 2, 2, 2, 2, 3, 3, 3, 3, 1, 1, 1, 4, 1, 1, 4, 1, 4, 1, 1, 1, 4, 1, 1, 1 });
-            list.Add(new int[] { 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 1,5,1,1,1,5,1,1,1,5,1,1,1 });
-            //Console.WriteLine(list.Last().Count());
-            //Console.WriteLine(list.Last().Where(a => a == 1).Count());
+            list.Add(new int[] { 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1 });
+            list.Add(new int[] { 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 });
             foreach (var arr in list)
             {
                 int foundMode = FindMode(arr, 0, arr.Length - 1).Mode;
@@ -65,7 +64,7 @@ namespace ConsTest
                     }
                 }
             }
-            TestUsingRandomArrays();
+            //TestUsingRandomArrays();
         }
 
         private static void TestUsingRandomArrays()
@@ -297,7 +296,7 @@ namespace ConsTest
                     if (others > mostRepeatedReps)/* we passed the mid point of the array but the most repeated element so far is repeated fewer times than 
                                                    * the other elements (exclude 2nd most repeated and 3rd most repeated); we need to reset counters, mode will be in the remaining half of the array. */
                     {
-                        mostRepeated = arr[i];
+                        mostRepeated = arr[i-1];
                         mostRepeatedReps = 1;
                         runnerUpReps = 0;
                         prevRunnerUpReps = 0;
