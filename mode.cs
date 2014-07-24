@@ -33,6 +33,7 @@ namespace ConsTest
             list.Add(new int[] { 2, 3, 2, 1, 3, 3 });
             list.Add(new int[] { 2, 3, 2, 3, 3, 3 });
             list.Add(new int[] { 2, 2, 2, 3, 3, 3 });
+            list.Add(new int[] { 1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,1,2 });
             list.Add(new int[] { 1, 1, 2, 1, 1, 2, 1, 1, 2, 3, 3, 3, 3, 3, 3, 1 });
             list.Add(new int[] { 1, 1, 1, 4, 1, 1, 4, 1, 4, 1, 1, 1, 4, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3 });
             list.Add(new int[] { 2, 2, 2, 2, 2, 3, 3, 3, 3, 1, 1, 1, 4, 1, 1, 4, 1, 4, 1, 1, 1, 4, 1, 1, 1 });
@@ -292,9 +293,7 @@ namespace ConsTest
             int runnerUp = 0;
             int runnerUpReps = 0;
             mostRepeated = arr[0];
-            mostRepeatedReps = 1;
-            int prevRunnerUp = 0;
-            int prevRunnerUpReps = 0;
+            mostRepeatedReps = 1;            
             int others = 0;
             int len = arr.Length;
             if (debug)
@@ -314,8 +313,7 @@ namespace ConsTest
                     {
                         mostRepeated = arr[i-1];
                         mostRepeatedReps = 1;
-                        runnerUpReps = 0;
-                        prevRunnerUpReps = 0;
+                        runnerUpReps = 0;                        
                         others = 0;                        
                     }
                 }
@@ -354,10 +352,6 @@ namespace ConsTest
                         occurrences++;
                         i++;
                     }
-                    if (arr[i] == prevRunnerUp)
-                    {
-                        occurrences += prevRunnerUpReps;
-                    }
                     if (occurrences >= mostRepeatedReps)
                     {
                         runnerUp = mostRepeated;
@@ -369,11 +363,6 @@ namespace ConsTest
                     {
                         runnerUp = arr[i];
                         runnerUpReps = occurrences;
-                    }
-                    else if(occurrences >= prevRunnerUpReps)
-                    {
-                        prevRunnerUp = arr[i];
-                        prevRunnerUpReps = occurrences;
                     }
                     else
                     {
