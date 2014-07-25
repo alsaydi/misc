@@ -33,18 +33,20 @@ namespace ConsTest
             list.Add(new int[] { 2, 3, 2, 1, 3, 3 });
             list.Add(new int[] { 2, 3, 2, 3, 3, 3 });
             list.Add(new int[] { 2, 2, 2, 3, 3, 3 });
+            list.Add(new int[] { 2, 2, 2, 3, 3, 3,2 });
             list.Add(new int[] { 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1 });
             list.Add(new int[] { 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1 });
             list.Add(new int[] { 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 2 });
-            list.Add(new int[] { 1, 1, 2, 1, 1, 2, 1, 1, 2, 3, 3, 3, 3, 3, 3, 1 });
+            list.Add(new int[] { 1, 1, 2, 1, 1, 2, 1, 1, 2, 1, 3, 3, 3, 3, 3, 1 });
             list.Add(new int[] { 1, 1, 1, 4, 1, 1, 4, 1, 4, 1, 1, 1, 4, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3 });
             list.Add(new int[] { 2, 2, 2, 2, 2, 3, 3, 3, 3, 1, 1, 1, 4, 1, 1, 4, 1, 4, 1, 1, 1, 4, 1, 1, 1 });
             list.Add(new int[] { 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1 });
             list.Add(new int[] { 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 });
             list.Add(new int[] { 1, 3, 3, 3, 3, 3, 3, 2, 1, 1, 2, 1, 1, 2, 1, 1 });
             list.Add(new int[] { 4, 4, 4, 4, 4, 3, 3, 3, 3, 2, 2, 2, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 1, 7, 7, 7, 1, 1, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7 });
+            list.Add(new int[] { 1, 2 });
             list.Add(new int[] { 1, 2, 1, 2, 1, 2, 1, 3, 3, 1 });
-            Console.WriteLine("Last List Count: {0}",list.Last().Count());
+            /*Console.WriteLine("Last List Count: {0}", list.Last().Count());
             Console.WriteLine("Mode: {0}", list.Last().Where(a => a == 1).Count());
             Console.WriteLine("Runner up: {0}", list.Last().Where(a => a == 2).Count());
             var last = list.Last();
@@ -54,13 +56,15 @@ namespace ConsTest
             Console.WriteLine("MidPoint: {0}", last[last.Length / 2]);
             Console.WriteLine("MidPoint-1: {0}", last[last.Length / 2-1]);
             Console.WriteLine("MidPoint+1: {0}", last[last.Length / 2+1]);
-            
+            */
             //FindModeLinear(last, true);
-            foreach (var arr in list.Skip(list.Count-1))
+            foreach (var arr in list)
             {
                 var rarr = arr.Reverse().ToArray();
                 //var rarr = arr;
                 int foundMode = FindMode(rarr, 0, arr.Length - 1).Mode;
+                var linqModeClass = FindModeLinq(arr);
+                int linqMode = linqModeClass.Mode;
                 int qMode = FindModeQuadratic(rarr);
                 int sMode = SortAndFindMode(rarr);
                 int lMode = FindModeLinear(rarr, false);
@@ -72,9 +76,16 @@ namespace ConsTest
                     Console.WriteLine("Mode in sorted array: {0}", sMode);
                     Console.WriteLine("Mode lineary method: {0}", lMode);
                 }
+                if (foundMode != linqMode)
+                {
+                    if (rarr.Distinct().Count() != 2)
+                    {
+                        Console.WriteLine("Different in LINQ method Mode: {0} Linq: {1}", foundMode, linqMode);
+                    }
+                }
                 if (foundMode != lMode)
                 {
-                    if (!(rarr.Distinct().Count() == 2))
+                    if (rarr.Distinct().Count() != 2)
                     {
                         PrintArray(rarr);
                         Console.WriteLine("Different expected: {0} actual: {1}", foundMode, lMode);
@@ -84,9 +95,10 @@ namespace ConsTest
                         // break;
                     }
                 }
-                if (bmMode != lMode)
+                if (foundMode != bmMode)
                 {
-                    if (!(rarr.Distinct().Count() == 2))
+                    
+                    if ( rarr.Distinct().Count() != 2 && linqModeClass.Reps != arr.Length/2 )
                     {
                         PrintArray(rarr);
                         Console.WriteLine("BoyerMoore Different expected: {0} actual: {1}",lMode, bmMode );
@@ -103,13 +115,14 @@ namespace ConsTest
         private static void TestUsingRandomArrays()
         {
             int N = 100;
-            int reps = 100;
+            int reps = 10000;
             for (int i = 0; i < reps; i++)
             {
                 var arr = BuildArray(N);
                 //PrintArray(arr);
                 int foundMode = FindMode(arr, 0, arr.Length - 1).Mode;
                 int lMode = FindModeLinear(arr, false);
+                int bmMode = BoyerMoore(arr, false);
                 //Console.WriteLine("Mode found: {0}", lMode);
                 if (foundMode != lMode)
                 {
@@ -121,6 +134,18 @@ namespace ConsTest
                         Console.WriteLine("*".PadRight(30, '*'));
                         Console.WriteLine(arr.Length);
                         //break;
+                    }
+                }
+                if (bmMode != lMode)
+                {
+                    if (!(arr.Distinct().Count() == 2))
+                    {
+                        PrintArray(arr);
+                        Console.WriteLine("BoyerMoore Different expected: {0} actual: {1}", lMode, bmMode);
+                        lMode = BoyerMoore(arr, true);
+                        Console.WriteLine("*".PadRight(30, '*'));
+                        Console.WriteLine(arr.Length);
+                        // break;
                     }
                 }
             }
@@ -158,6 +183,13 @@ namespace ConsTest
             var avg = arr.Average();
             var list = from num in arr select (num - avg) * (num - avg);
             return Math.Sqrt(list.Average());
+        }
+        static ModeClass FindModeLinq(int[] arr)
+        {
+            var mode =(from i in arr 
+                      group i by i into g
+                      select new ModeClass (g.Key,  g.Count())).OrderByDescending((m) => m.Reps).First();
+            return mode;
         }
         static ModeClass FindMode(int[] arr, int start, int end)
         {
@@ -327,7 +359,7 @@ namespace ConsTest
                     runnerUpReps = 0;
                     others = 0;
                 }
-                
+
                 if (arr[i] == mostRepeated)
                 {
                     mostRepeatedReps++;
@@ -414,7 +446,7 @@ namespace ConsTest
             if (runnerUpReps > mostRepeatedReps)
             {
                 mostRepeated = runnerUp;
-            }           
+            }
             //Console.WriteLine(mostRepeatedReps);
             return mostRepeated;
         }
