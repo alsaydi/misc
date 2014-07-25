@@ -43,7 +43,8 @@ namespace ConsTest
             list.Add(new int[] { 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 });
             list.Add(new int[] { 1, 3, 3, 3, 3, 3, 3, 2, 1, 1, 2, 1, 1, 2, 1, 1 });
             list.Add(new int[] { 4, 4, 4, 4, 4, 3, 3, 3, 3, 2, 2, 2, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 1, 7, 7, 7, 1, 1, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7 });
-            /*Console.WriteLine("Last List Count: {0}",list.Last().Count());
+            list.Add(new int[] { 1, 2, 1, 2, 1, 2, 1, 3, 3, 1 });
+            Console.WriteLine("Last List Count: {0}",list.Last().Count());
             Console.WriteLine("Mode: {0}", list.Last().Where(a => a == 1).Count());
             Console.WriteLine("Runner up: {0}", list.Last().Where(a => a == 2).Count());
             var last = list.Last();
@@ -53,16 +54,17 @@ namespace ConsTest
             Console.WriteLine("MidPoint: {0}", last[last.Length / 2]);
             Console.WriteLine("MidPoint-1: {0}", last[last.Length / 2-1]);
             Console.WriteLine("MidPoint+1: {0}", last[last.Length / 2+1]);
-            */
+            
             //FindModeLinear(last, true);
-            foreach (var arr in list)
+            foreach (var arr in list.Skip(list.Count-1))
             {
-                //var rarr = arr.Reverse().ToArray();
-                var rarr = arr;
+                var rarr = arr.Reverse().ToArray();
+                //var rarr = arr;
                 int foundMode = FindMode(rarr, 0, arr.Length - 1).Mode;
                 int qMode = FindModeQuadratic(rarr);
                 int sMode = SortAndFindMode(rarr);
                 int lMode = FindModeLinear(rarr, false);
+                int bmMode = BoyerMoore(arr, false);
                 if (false)
                 {
                     Console.WriteLine("Mode in Quadratic time: {0}", qMode);
@@ -82,14 +84,26 @@ namespace ConsTest
                         // break;
                     }
                 }
+                if (bmMode != lMode)
+                {
+                    if (!(rarr.Distinct().Count() == 2))
+                    {
+                        PrintArray(rarr);
+                        Console.WriteLine("BoyerMoore Different expected: {0} actual: {1}",lMode, bmMode );
+                        lMode = BoyerMoore(rarr, true);
+                        Console.WriteLine("*".PadRight(30, '*'));
+                        Console.WriteLine(arr.Length);
+                        // break;
+                    }
+                }
             }
-            //TestUsingRandomArrays();            
+            TestUsingRandomArrays();            
         }
 
         private static void TestUsingRandomArrays()
         {
             int N = 100;
-            int reps = 1000000;
+            int reps = 100;
             for (int i = 0; i < reps; i++)
             {
                 var arr = BuildArray(N);
@@ -106,7 +120,7 @@ namespace ConsTest
                         lMode = FindModeLinear(arr, true);
                         Console.WriteLine("*".PadRight(30, '*'));
                         Console.WriteLine(arr.Length);
-                        break;
+                        //break;
                     }
                 }
             }
@@ -454,5 +468,63 @@ namespace ConsTest
             //Console.WriteLine(mostRepeatedReps);
             return mostRepeated;
         }
-    }
+        static int SO_FindModeLinear(int[] arr,bool debug)
+        {
+            int num = arr[0];
+            int occ = 1;
+            if(debug) Console.Write("{0} ", arr[0]);
+            for (int i = 1; i < arr.Length; i++)
+            {
+                if (debug) Console.Write("{0} ", arr[i]);
+                if (arr[i] == num)
+                {
+                    occ++;
+                }
+                else
+                {
+                    occ--;
+                    if (occ < 0)
+                    {
+                        num = arr[i];
+                        occ = 1;
+                    }
+                }
+            }
+            if (debug) Console.WriteLine();
+            return num;
+        }
+        /// <summary>
+        /// Boyer-Moore works if mode appears at least N/2+1 times in the array
+        /// http://stackoverflow.com/questions/3740371/finding-the-max-repeated-element-in-an-array
+        /// </summary>
+        /// <param name="arr"></param>
+        /// <param name="debug"></param>
+        /// <returns></returns>
+        static int BoyerMoore(int[] arr,bool debug)
+        {
+            int current_candidate = arr[0];
+            int counter = 0;
+            for (int i = 0; i < arr.Length; ++i)
+            {
+                if (current_candidate == arr[i])
+                {
+                    ++counter;
+                    //Console.WriteLine("candidate: {0}, counter: {1}\n", current_candidate, counter);
+                }
+                else if (counter == 0)
+                {
+                    current_candidate = arr[i];
+                    ++counter;
+                    //Console.WriteLine("candidate: {0}, counter: {1}\n", current_candidate, counter);
+                }
+                else
+                {
+                    --counter;
+                    //Console.WriteLine("candidate: {0}, counter: {1}\n", current_candidate, counter);
+                }
+            }
+            return current_candidate;
+        }
+    }   
+
 }
