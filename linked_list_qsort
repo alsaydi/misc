@@ -1,0 +1,128 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Tests
+{
+    public class MLinkedList
+    {
+        public static void Test()
+        {
+            MLinkedList ll = new MLinkedList();
+            //ll.Add(new int[] { 5,9,4,-1,3,2,8,1});
+            //ll.Add(new int[] { -2,-3,-9,0,1, 1, 1, 1,-1 });
+            for (int i = 10; i >0; i--)
+            {
+                //ll.Add(i);
+                ll.Add(new Random((int)DateTime.Now.Ticks+i).Next(1, 22));
+            }
+            ll.Print();
+            //ll.Partition();
+            ll.Sort();
+            Console.WriteLine();
+            ll.Print();
+        }
+        public void Sort()
+        {
+            this.qs(head, null);
+        }
+        private void qs(Node<int> start, Node<int> end)
+        {
+            if (start == null || start == end || start.next == end)
+            {
+                return;
+            }
+            var mid = Partition(start, end);
+            qs(start, mid);
+            qs(mid.next, end);
+        }
+        public Node<int> Partition(Node<int> start,Node<int> end)
+        {
+            //if (start == null || start.next == null) return null;
+            Node<int> pivotPtr = start;
+            Node<int> placePtr = start.next;
+            Node<int> prevPlacePtr = start;
+            Node<int> workPtr = start.next;
+            int temp = 0;
+            int x = pivotPtr.data;
+            while (workPtr != end && workPtr != null)
+            {
+                if (workPtr.data <= x)
+                {
+                    temp = placePtr.data;
+                    placePtr.data = workPtr.data;
+                    workPtr.data = temp;
+                    prevPlacePtr = placePtr;
+                    placePtr = placePtr.next;
+                }
+                workPtr = workPtr.next;
+            }
+            if (pivotPtr != null)
+            {
+                temp = prevPlacePtr.data;
+                prevPlacePtr.data = pivotPtr.data;
+                pivotPtr.data = temp;
+            }
+            return prevPlacePtr;
+        }
+
+        private Node<int> FindNode(int x)
+        {
+            var temp = head;
+            while (temp != null)
+            {
+                if (temp.data == x)
+                {
+                    return temp;
+                }
+                temp = temp.next;
+            }
+            return null;
+        }
+        public void Add(IEnumerable<int> list)
+        {
+            foreach (var item in list)
+            {
+                this.Add(item);
+            }
+        }
+        public class Node<T>
+        {
+            public T data;
+            public Node<T> next;
+            public override string ToString()
+            {
+                return data.ToString();
+            }
+        }
+        private Node<int> head ;
+        private Node<int> tail ;
+
+        public void Add(int data)
+        {
+            if (head == null)
+            {
+                head = new Node<int>();
+                head.data = data;
+                tail = head;
+            }
+            else
+            {
+                tail.next = new Node<int>();
+                tail.next.data = data;
+                tail = tail.next;
+            }
+        }
+        public void Print()
+        {
+            var temp = head;
+            while (temp != null)
+            {
+                Console.Write("{0} ", temp.data);
+                temp = temp.next;
+            }
+            Console.WriteLine();
+        }
+    }
+}
